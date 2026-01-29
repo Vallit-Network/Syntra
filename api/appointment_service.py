@@ -234,7 +234,7 @@ END:VCALENDAR"""
                 <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
                 
                 <div style="font-size: 12px; color: #999; text-align: center;">
-                    <p>WTM Consulting | Kontakt: <a href="mailto:contact@wtm-consulting.de" style="color: #666;">contact@wtm-consulting.de</a></p>
+                    <p>WTM Consulting | Kontakt: <a href="mailto:kontakt@wtm-consulting.de" style="color: #666;">kontakt@wtm-consulting.de</a></p>
                 </div>
             </div>
         </div>
