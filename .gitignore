@@ -16,3 +16,7 @@ models/**/*.safetensors
 *.ckpt
 __pycache__/
 *.pyc
+
+# Secrets
+credentials.json
+api/credentials.json
