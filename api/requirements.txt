@@ -7,3 +7,5 @@ APScheduler==3.10.4
 beautifulsoup4
 openai==1.6.1
 flask-cors==4.0.0
+google-auth
+google-api-python-client
