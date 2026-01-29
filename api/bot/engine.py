@@ -83,7 +83,7 @@ class CompanyBot:
                         },
                         "purpose": {
                             "type": "string",
-                            "description": "Detailed reason or specific seminar name"
+                            "description": "The specific name of the Seminar or Coaching (e.g., 'Laterales Führen', 'Projektmanagement') or detailed reason"
                         }
                     },
                     "required": ["name", "company_name", "email", "date_time", "topic_type"]

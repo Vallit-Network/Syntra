@@ -219,7 +219,7 @@ END:VCALENDAR"""
             <div style="padding: 30px 20px; border: 1px solid #e0e0e0; border-top: none; border-radius: 0 0 8px 8px;">
                 <h2 style="color: #2c3e50; margin-top: 0;">Terminbestätigung</h2>
                 <p>Hallo {user_name},</p>
-                <p>Ihr Termin wurde erfolgreich gebucht. Hier sind die Details:</p>
+                <p>Ihr Termin wurde erfolgreich gebucht. Wir freuen uns auf das Gespräch.</p>
                 
                 <div style="background-color: #f0f7f7; padding: 20px; border-radius: 8px; margin: 25px 0;">
                     <p style="margin: 5px 0;"><strong>Thema:</strong> {topic}</p>
@@ -229,13 +229,12 @@ END:VCALENDAR"""
                     </p>
                 </div>
                 
-                <p style="font-size: 14px; color: #666;">Ein Kalendereintrag (ICS) befindet sich im Anhang.</p>
+                <p style="font-size: 14px; color: #666;">Ein Kalendereintrag (ICS) mit allen Details befindet sich im Anhang.</p>
                 
                 <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
                 
                 <div style="font-size: 12px; color: #999; text-align: center;">
-                    <p>Powered by Vallit</p>
-                    <p>WTM Consulting | Kontakt: <a href="mailto:contact@vallit.net" style="color: #666;">contact@vallit.net</a></p>
+                    <p>WTM Consulting | Kontakt: <a href="mailto:contact@wtm-consulting.de" style="color: #666;">contact@wtm-consulting.de</a></p>
                 </div>
             </div>
         </div>
@@ -249,23 +248,21 @@ END:VCALENDAR"""
         admin_msg = MIMEMultipart()
         admin_msg['From'] = f'"WTM Bot" <{sender_email}>'
         admin_msg['To'] = wtm_contact_email
-        admin_msg['Subject'] = f"📝 NEUE BUCHUNG: {user_name} - {topic}"
+        admin_msg['Subject'] = f"🔔 NEUE BUCHUNG: {user_name}"
 
         html_body_admin = f"""
         <div style="font-family: monospace; max-width: 800px; margin: 0 auto; border: 1px solid #ccc; padding: 20px;">
             <h2 style="color: #d32f2f;">New Booking Alert</h2>
             <table style="width: 100%; border-collapse: collapse;">
-                <tr style="background-color: #eee;"><th style="padding: 8px; text-align: left;">Field</th><th style="padding: 8px; text-align: left;">Value</th></tr>
+                <tr style="background-color: #f3f4f6;"><th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">Field</th><th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">Value</th></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Customer Name</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{user_name}</td></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Company</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{company_name or 'N/A'}</td></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Email</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;"><a href="mailto:{user_email}">{user_email}</a></td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Topic</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{topic}</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Date/Time (UTC)</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{date_time}</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Formatted Time</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{formatted_date}</td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Topic (Short)</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{topic}</td></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Zoom Link</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;"><a href="{zoom_link}">{zoom_link}</a></td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Session ID</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{session_id or 'Unknown'}</td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Date (Formatted)</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{formatted_date}</td></tr>
             </table>
-            <p style="margin-top: 20px;"><em>This booking has been saved to the database.</em></p>
+            <p style="margin-top: 20px;">This appointment has been automatically added to the specific Google Calendar.</p>
         </div>
         """
         admin_msg.attach(MIMEText(html_body_admin, 'html'))
@@ -337,12 +334,20 @@ END:VCALENDAR"""
             # 1. Zoom
             zoom_token = AppointmentService.get_zoom_access_token()
             
-            # Construct rich topic
-            display_topic = f"WTM {topic_type}: {purpose}"
-            if company_name:
-                display_topic += f" ({company_name})"
+            # 1. Zoom
+            zoom_token = AppointmentService.get_zoom_access_token()
             
-            zoom_meeting = AppointmentService.create_zoom_meeting(zoom_token, display_topic, iso_start_time)
+            # Construct rich topic
+            # Clean formatting: "{topic_type}: {purpose}"
+            # e.g., "Seminar: Laterales Führen" or "Coaching: Leadership"
+            display_topic = f"{topic_type}: {purpose}"
+            
+            # Zoom Topic often needs to be short but descriptive
+            zoom_topic = f"{display_topic}"
+            if company_name:
+                zoom_topic += f" ({company_name})"
+            
+            zoom_meeting = AppointmentService.create_zoom_meeting(zoom_token, zoom_topic, iso_start_time)
             
             zoom_join_url = zoom_meeting.get('join_url') if zoom_meeting else "Pending (Zoom Error)"
             zoom_start_url = zoom_meeting.get('start_url') if zoom_meeting else ""
@@ -351,7 +356,7 @@ END:VCALENDAR"""
             # 2. Save to DB using Supabase client
             try:
                 # Enrich purpose for DB storage
-                db_purpose = f"[{topic_type}] {purpose}"
+                db_purpose = f"{display_topic}"
                 if company_name:
                     db_purpose += f" | Company: {company_name}"
                 db_purpose += f" | Zoom: {zoom_join_url}"
@@ -373,11 +378,19 @@ END:VCALENDAR"""
                 record = {"id": "offline-id"}
 
             # 3. Email & ICS
+            ics_description = f"""Meeting: {display_topic}
+Zoom Link: {zoom_join_url}
+
+Client: {name}
+Company: {company_name or 'N/A'}
+Service: {topic_type}
+Focus: {purpose}
+"""
             ics_content = AppointmentService.generate_ics(
                 iso_start_time, 
                 60, 
                 display_topic, 
-                f"Topic: {display_topic}\\nZoom: {zoom_join_url}\\nClient: {name}\\nCompany: {company_name or 'N/A'}", 
+                ics_description, 
                 zoom_join_url, 
                 "WTM Consulting", 
                 "kontakt@wtm-consulting.de"
@@ -392,15 +405,20 @@ END:VCALENDAR"""
             try:
                 # Format description for GCal
                 gcal_desc = f"""
-Meeting Topic: {display_topic}
-Client: {name} ({email})
-Company: {company_name or 'N/A'}
+Meeting: {display_topic}
 Zoom Link: {zoom_join_url}
 
-Purpose Note: {purpose}
+--- Client Details ---
+Name: {name}
+Email: {email}
+Company: {company_name or 'N/A'}
+
+--- Session Details ---
+Service Type: {topic_type}
+Specific Focus: {purpose}
 """
                 AppointmentService.insert_google_calendar_event(
-                    summary=display_topic,
+                    summary=zoom_topic,  # Use the one with company name in title for GCal
                     location=zoom_join_url,
                     description=gcal_desc,
                     start_time_iso=iso_start_time,
