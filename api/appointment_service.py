@@ -7,6 +7,8 @@ import requests
 import json
 import base64
 from datetime import datetime, timedelta
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
 
 class AppointmentService:
     @staticmethod
@@ -114,7 +116,55 @@ END:VCALENDAR"""
         return ics_content
 
     @staticmethod
-    def send_confirmation_email(user_email, user_name, topic, date_time, zoom_link, ics_content):
+    def insert_google_calendar_event(summary, location, description, start_time_iso, duration_minutes=60):
+        """Inserts an event into the Google Calendar specified by CALENDAR_ID."""
+        try:
+            creds_path = os.path.join(os.path.dirname(__file__), 'credentials.json')
+            if not os.path.exists(creds_path):
+                print("Google Calendar Error: credentials.json not found.")
+                return False
+
+            calendar_id = os.getenv('CALENDAR_ID')
+            if not calendar_id:
+                print("Google Calendar Error: CALENDAR_ID not set.")
+                return False
+
+            SCOPES = ['https://www.googleapis.com/auth/calendar']
+            creds = service_account.Credentials.from_service_account_file(creds_path, scopes=SCOPES)
+            service = build('calendar', 'v3', credentials=creds)
+
+            # Parse start time
+            try:
+                dt_start = datetime.fromisoformat(start_time_iso.replace('Z', '+00:00'))
+            except ValueError:
+                dt_start = datetime.now() # Fallback
+
+            dt_end = dt_start + timedelta(minutes=duration_minutes)
+
+            event = {
+                'summary': summary,
+                'location': location,
+                'description': description,
+                'start': {
+                    'dateTime': dt_start.isoformat(),
+                    'timeZone': 'Europe/Berlin',
+                },
+                'end': {
+                    'dateTime': dt_end.isoformat(),
+                    'timeZone': 'Europe/Berlin',
+                },
+            }
+
+            created_event = service.events().insert(calendarId=calendar_id, body=event).execute()
+            print(f"Google Calendar Event created: {created_event.get('htmlLink')}")
+            return True
+
+        except Exception as e:
+            print(f"Google Calendar Exception: {e}")
+            return False
+
+    @staticmethod
+    def send_confirmation_email(user_email, user_name, topic, date_time, zoom_link, ics_content, company_name=None, session_id=None):
         # Update default host to Strato (WTM Provider)
         smtp_host = os.getenv('SMTP_HOST', 'smtp.strato.de')
         smtp_port = int(os.getenv('SMTP_PORT', 465))
@@ -123,73 +173,105 @@ END:VCALENDAR"""
         
         # WTM Specific Contact
         wtm_contact_email = "kontakt@wtm-consulting.de"
+        sender_email = "kontakt@wtm-consulting.de"
         
         if not all([smtp_user, smtp_pass]):
             print("Missing SMTP credentials")
             return False
 
+        # --- User Email (Branded & Concise) ---
         msg = MIMEMultipart()
-        msg['From'] = f'"WTM Consulting" <{smtp_user}>'
+        # Use a friendly name in the From header
+        msg['From'] = f'"WTM Consulting" <{sender_email}>' 
         msg['To'] = user_email
-        msg['Subject'] = f"Confirmation: {topic}"
+        msg['Reply-To'] = "contact@vallit.net" # As requested
+        msg['Subject'] = f"Ihr Termin: {topic}"
 
-        html_body = f"""
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fafafa;">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <h2 style="color: #22c55e;">Appointment Confirmed</h2>
+        # Clean formatting for email display
+        formatted_date = date_time
+        try:
+             dt = datetime.fromisoformat(date_time.replace('Z', '+00:00'))
+             formatted_date = dt.strftime('%d.%m.%Y um %H:%M Uhr')
+        except:
+            pass
+
+        html_body_user = f"""
+        <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6;">
+            <!-- Header with Logo -->
+            <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h1 style="margin: 0; color: #3D7A77; font-size: 24px;">WTM Consulting</h1>
             </div>
-            <p>Hi {user_name},</p>
-            <p>Your appointment with <strong>WTM Consulting</strong> has been successfully scheduled.</p>
             
-            <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin: 20px 0;">
-                <p><strong>Topic:</strong> {topic}</p>
-                <p><strong>Time:</strong> {date_time}</p>
-                <p><strong>Zoom Link:</strong> <a href="{zoom_link}" style="color: #007bff;">Join Meeting</a></p>
+            <div style="padding: 30px 20px; border: 1px solid #e0e0e0; border-top: none; border-radius: 0 0 8px 8px;">
+                <h2 style="color: #2c3e50; margin-top: 0;">Terminbestätigung</h2>
+                <p>Hallo {user_name},</p>
+                <p>Ihr Termin wurde erfolgreich gebucht. Hier sind die Details:</p>
+                
+                <div style="background-color: #f0f7f7; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                    <p style="margin: 5px 0;"><strong>Thema:</strong> {topic}</p>
+                    <p style="margin: 5px 0;"><strong>Zeit:</strong> {formatted_date}</p>
+                    <p style="margin: 15px 0;">
+                        <a href="{zoom_link}" style="background-color: #3D7A77; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Zum Zoom Meeting</a>
+                    </p>
+                </div>
+                
+                <p style="font-size: 14px; color: #666;">Ein Kalendereintrag (ICS) befindet sich im Anhang.</p>
+                
+                <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+                
+                <div style="font-size: 12px; color: #999; text-align: center;">
+                    <p>Powered by Vallit</p>
+                    <p>WTM Consulting | Kontakt: <a href="mailto:contact@vallit.net" style="color: #666;">contact@vallit.net</a></p>
+                </div>
             </div>
-            
-            <p>A calendar invitation is attached to this email. Please add it to your calendar.</p>
-            
-            <p>Best regards,<br>The WTM Consulting Team</p>
         </div>
         """
-        msg.attach(MIMEText(html_body, 'html'))
-
-        # Attach ICS
-        part = MIMEApplication(ics_content.encode('utf-8'), Name="invitation.ics")
-        part['Content-Disposition'] = 'attachment; filename="invitation.ics"'
+        msg.attach(MIMEText(html_body_user, 'html'))
+        part = MIMEApplication(ics_content.encode('utf-8'), Name="termin.ics")
+        part['Content-Disposition'] = 'attachment; filename="termin.ics"'
         msg.attach(part)
 
+        # --- Admin Email (Detailed) ---
+        admin_msg = MIMEMultipart()
+        admin_msg['From'] = f'"WTM Bot" <{sender_email}>'
+        admin_msg['To'] = wtm_contact_email
+        admin_msg['Subject'] = f"📝 NEUE BUCHUNG: {user_name} - {topic}"
+
+        html_body_admin = f"""
+        <div style="font-family: monospace; max-width: 800px; margin: 0 auto; border: 1px solid #ccc; padding: 20px;">
+            <h2 style="color: #d32f2f;">New Booking Alert</h2>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr style="background-color: #eee;"><th style="padding: 8px; text-align: left;">Field</th><th style="padding: 8px; text-align: left;">Value</th></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Customer Name</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{user_name}</td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Company</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{company_name or 'N/A'}</td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Email</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;"><a href="mailto:{user_email}">{user_email}</a></td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Topic</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{topic}</td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Date/Time (UTC)</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{date_time}</td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Formatted Time</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{formatted_date}</td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Zoom Link</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;"><a href="{zoom_link}">{zoom_link}</a></td></tr>
+                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Session ID</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">{session_id or 'Unknown'}</td></tr>
+            </table>
+            <p style="margin-top: 20px;"><em>This booking has been saved to the database.</em></p>
+        </div>
+        """
+        admin_msg.attach(MIMEText(html_body_admin, 'html'))
+        admin_part = MIMEApplication(ics_content.encode('utf-8'), Name="booking.ics")
+        admin_part['Content-Disposition'] = 'attachment; filename="booking.ics"'
+        admin_msg.attach(admin_part)
+
         try:
-            # Set timeout to avoid hanging the bot
             print(f"Connecting to SMTP {smtp_host}:{smtp_port}...")
-            with smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=10) as server:
+            # Use Strato specific SSL context if needed, but standard usually works
+            with smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=15) as server:
                 server.login(smtp_user, smtp_pass)
-                server.send_message(msg)
-                print("User confirmation email sent successfully.")
                 
-                # Send notification to Admin (WTM)
-                admin_msg = MIMEMultipart()
-                admin_msg['From'] = f'"WTM Bot" <{smtp_user}>'
-                admin_msg['To'] = wtm_contact_email 
-                admin_msg['Subject'] = f"NEW BOOKING: {user_name}"
-                admin_html = f"""
-                <h3>New Appointment Request</h3>
-                <ul>
-                    <li><strong>Name:</strong> {user_name}</li>
-                    <li><strong>Email:</strong> {user_email}</li>
-                    <li><strong>Topic:</strong> {topic}</li>
-                    <li><strong>Date:</strong> {date_time}</li>
-                </ul>
-                 <p><strong>Zoom Link:</strong> <a href="{zoom_link}">{zoom_link}</a></p>
-                """
-                admin_msg.attach(MIMEText(admin_html, 'html'))
-                # Attach ICS to admin email too
-                admin_part = MIMEApplication(ics_content.encode('utf-8'), Name="booking.ics")
-                admin_part['Content-Disposition'] = 'attachment; filename="booking.ics"'
-                admin_msg.attach(admin_part)
-            
+                # Send to User
+                server.send_message(msg)
+                print("User confirmation email sent.")
+                
+                # Send to Admin
                 server.send_message(admin_msg)
-                print(f"Admin notification email sent successfully to {wtm_contact_email}.")
+                print(f"Admin notification email sent to {wtm_contact_email}.")
                 
             return True
         except Exception as e:
@@ -288,8 +370,31 @@ END:VCALENDAR"""
             )
             
             email_sent = AppointmentService.send_confirmation_email(
-                email, name, display_topic, iso_start_time, zoom_join_url, ics_content
+                email, name, display_topic, iso_start_time, zoom_join_url, ics_content,
+                company_name=company_name, session_id=session_id
             )
+            
+            # 4. Google Calendar (Direct Insert)
+            try:
+                # Format description for GCal
+                gcal_desc = f"""
+Meeting Topic: {display_topic}
+Client: {name} ({email})
+Company: {company_name or 'N/A'}
+Zoom Link: {zoom_join_url}
+
+Purpose Note: {purpose}
+"""
+                AppointmentService.insert_google_calendar_event(
+                    summary=display_topic,
+                    location=zoom_join_url,
+                    description=gcal_desc,
+                    start_time_iso=iso_start_time,
+                    duration_minutes=60
+                )
+            except Exception as gcal_e:
+                print(f"Google Calendar Insert Error: {gcal_e}")
+                # Don't fail the booking if calendar sync fails
 
             return record
 
