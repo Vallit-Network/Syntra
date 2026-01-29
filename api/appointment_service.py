@@ -119,18 +119,27 @@ END:VCALENDAR"""
     def insert_google_calendar_event(summary, location, description, start_time_iso, duration_minutes=60):
         """Inserts an event into the Google Calendar specified by CALENDAR_ID."""
         try:
-            creds_path = os.path.join(os.path.dirname(__file__), 'credentials.json')
-            if not os.path.exists(creds_path):
-                print("Google Calendar Error: credentials.json not found.")
-                return False
-
-            calendar_id = os.getenv('CALENDAR_ID')
-            if not calendar_id:
-                print("Google Calendar Error: CALENDAR_ID not set.")
-                return False
-
             SCOPES = ['https://www.googleapis.com/auth/calendar']
-            creds = service_account.Credentials.from_service_account_file(creds_path, scopes=SCOPES)
+            
+            # Check for file first
+            creds_path = os.path.join(os.path.dirname(__file__), 'credentials.json')
+            
+            if os.path.exists(creds_path):
+                creds = service_account.Credentials.from_service_account_file(creds_path, scopes=SCOPES)
+            else:
+                # Fallback: Check for JSON string in environment variable
+                json_creds = os.getenv('GOOGLE_CREDENTIALS_JSON')
+                if json_creds:
+                    try:
+                        info = json.loads(json_creds)
+                        creds = service_account.Credentials.from_service_account_info(info, scopes=SCOPES)
+                    except json.JSONDecodeError:
+                        print("Google Calendar Error: Invalid JSON in GOOGLE_CREDENTIALS_JSON.")
+                        return False
+                else:
+                    print("Google Calendar Error: credentials.json not found and GOOGLE_CREDENTIALS_JSON not set.")
+                    return False
+
             service = build('calendar', 'v3', credentials=creds)
 
             # Parse start time
