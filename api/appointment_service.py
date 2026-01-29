@@ -140,6 +140,11 @@ END:VCALENDAR"""
                     print("Google Calendar Error: credentials.json not found and GOOGLE_CREDENTIALS_JSON not set.")
                     return False
 
+            calendar_id = os.getenv('CALENDAR_ID')
+            if not calendar_id:
+                print("Google Calendar Error: CALENDAR_ID not set.")
+                return False
+
             service = build('calendar', 'v3', credentials=creds)
 
             # Parse start time
