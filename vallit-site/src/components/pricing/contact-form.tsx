@@ -68,13 +68,24 @@ export function ContactForm() {
 
         setStatus("submitting");
 
-        // Simulate form submission
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
 
-        // In production, this would send to your backend
-        console.log("Form submitted:", formData);
+            if (!response.ok) {
+                throw new Error('Submission failed');
+            }
 
-        setStatus("success");
+            console.log("Form submitted successfully");
+            setStatus("success");
+        } catch (error) {
+            console.error(error);
+            setStatus("error");
+            // Optionally set error message state here if needed
+        }
     };
 
     if (status === "success") {

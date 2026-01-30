@@ -6,7 +6,7 @@ const useCases = [
     {
         title: "Sales Operations",
         description:
-            "Qualify leads, schedule demos, and update your CRM automatically. Kian handles the repetitive work so your team can close deals.",
+            "Qualify leads, schedule demos, and update your CRM automatically. Our systems handle the repetitive work so your team can close deals.",
         href: "/solutions#sales",
     },
     {
@@ -34,9 +34,9 @@ export function UseCases() {
         <section className="py-24 md:py-32 bg-[rgba(255,255,255,0.01)]">
             <div className="container mx-auto px-6 max-w-6xl">
                 <SectionHeader
-                    badge="Use Cases"
+                    badge="Impact"
                     title="Built for real work"
-                    subtitle="See how teams use Kian to automate their most time-consuming tasks."
+                    subtitle="See how teams use our solutions to automate their most time-consuming tasks."
                 />
 
                 <GlowGrid columns={2}>

@@ -2,17 +2,7 @@
 
 import { SectionHeader } from "@/components/ui/section";
 import { motion } from "framer-motion";
-import {
-    MessageSquare,
-    Calendar as CalendarIcon,
-    Workflow,
-    ShieldCheck,
-    Blocks,
-    Zap,
-    CheckCircle2,
-    Clock,
-    MoreHorizontal
-} from "lucide-react";
+import { Bot, Youtube, Code2, Globe, Clock, Workflow, Zap, BarChart3 } from "lucide-react";
 import React from "react";
 
 import { PremiumBackground } from "@/components/ui/premium-background";
@@ -23,61 +13,49 @@ export function Benefits() {
             <PremiumBackground />
             <div className="container mx-auto px-6 max-w-6xl relative z-10">
                 <SectionHeader
-                    badge="Why Kian"
-                    title="Automation that actually works"
-                    subtitle="No drag-and-drop builders. No endless configuration. Just AI systems that understand your business and get work done."
+                    badge="What We Do"
+                    title="Digital Solutions. Redefined."
+                    subtitle="We don't just follow trends. We build the systems that define them. Personalized, intelligent, and built for your specific needs."
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[420px]">
-                    {/* Card 1: Intelligent Support (Span 2) */}
+                    {/* Row 1: AI Automation (2) + Discord (1) */}
                     <BentoCard
                         className="md:col-span-2"
-                        title="Intelligent Support"
-                        description="Kian answers questions in real-time, drawing from your knowledge base. 24/7 availability."
-                        icon={MessageSquare}
-                        visual={<SupportUI />}
-                    />
-
-                    {/* Card 2: Smart Scheduling (Span 1) */}
-                    <BentoCard
-                        title="Smart Scheduling"
-                        description="Coordinates meetings automatically with your availability rules."
-                        icon={CalendarIcon}
-                        visual={<CalendarUI />}
-                    />
-
-                    {/* Card 3: Workflow Automation (Span 1) */}
-                    <BentoCard
-                        title="Workflow Automation"
-                        description="Executes complex multi-step actions across your stack."
+                        title="AI Automation"
+                        description="Custom enterprise neural networks. We automate your business logic, from customer support to complex internal workflows."
                         icon={Workflow}
                         visual={<WorkflowUI />}
                     />
-
-                    {/* Card 4: Deep Integrations (Span 2) */}
                     <BentoCard
-                        className="md:col-span-2"
-                        title="Deep Integrations"
-                        description="Works with Slack, Google Workspace, Notion, HubSpot, and your internal APIs."
-                        icon={Blocks}
-                        visual={<IntegrationsUI />}
+                        title="Discord Intelligence"
+                        description="Deeply integrated community bots that understand context, manage roles, and connect to your stack."
+                        icon={Bot}
+                        visual={<DiscordUI />}
                     />
 
-                    {/* Card 5: Human-in-the-Loop (Span 1) */}
-                    <BentoCard
-                        title="Human-in-the-Loop"
-                        description="Seamless escalation to human verification when needed."
-                        icon={ShieldCheck}
-                        visual={<HumanLoopUI />}
-                    />
-
-                    {/* Card 6: Managed Delivery (Span 2) */}
+                    {/* Row 2: Data Analysis (2) + Website (1) */}
                     <BentoCard
                         className="md:col-span-2"
-                        title="Managed Delivery"
-                        description="We build, deploy, and maintain your AI infrastructure."
-                        icon={Zap}
-                        visual={<ManagedUI />}
+                        title="Deep Data Analysis"
+                        description="Unlock hidden value in your data. We use AI to analyze patterns, optimize workflows, and predict trends."
+                        icon={BarChart3}
+                        visual={<DataAnalysisUI />}
+                    />
+                    <BentoCard
+                        title="Immersive Websites"
+                        description="High-performance, Next.js web experiences designed to convert. Smooth animations and premium aesthetics."
+                        icon={Globe}
+                        visual={<WebsiteUI />}
+                    />
+
+                    {/* Row 3: Time Tracking (3) */}
+                    <BentoCard
+                        className="md:col-span-3"
+                        title="Cognitive Time Tracking"
+                        description="AI that knows what you're working on. Automatically categorize time, generate invoices, and get productivity insights without the manual hassle."
+                        icon={Clock}
+                        visual={<TimeTrackingUI />}
                     />
                 </div>
             </div>
@@ -103,7 +81,7 @@ function BentoCard({
             className={`group relative overflow-hidden rounded-3xl bg-[#0A0A0A] border border-white/10 hover:border-white/20 transition-all duration-300 shadow-2xl ${className}`}
         >
             {/* Visual Area */}
-            <div className="absolute inset-x-0 top-0 h-[55%] flex items-center justify-center overflow-hidden bg-[#0A0A0A]">
+            <div className="absolute inset-x-0 top-0 h-[60%] flex items-center justify-center overflow-hidden bg-[#0A0A0A]">
                 {/* Inner lighting effect - simplified */}
                 <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
                 <div className="relative w-full h-full p-8 md:p-10 flex items-center justify-center">
@@ -112,7 +90,7 @@ function BentoCard({
             </div>
 
             {/* Content */}
-            <div className="absolute inset-x-0 bottom-0 z-20 p-8 flex flex-col justify-end bg-[#0A0A0A] border-t border-white/5 h-[45%]">
+            <div className="absolute inset-x-0 bottom-0 z-20 p-8 flex flex-col justify-end bg-[#0A0A0A] border-t border-white/5 h-[40%]">
                 <div className="flex items-center gap-3 mb-2">
                     <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
                         <Icon className="w-4 h-4 text-[#888] group-hover:text-white transition-colors" />
@@ -129,46 +107,101 @@ function BentoCard({
 
 // --- PREMIUM VISUALS ---
 
-function SupportUI() {
+function DataAnalysisUI() {
     return (
-        <div className="w-full max-w-[280px] bg-[#0A0A0A] rounded-xl border border-white/[0.08] shadow-2xl overflow-hidden relative font-sans transform group-hover:scale-105 transition-transform duration-500">
+        <div className="w-full max-w-[400px] bg-[#0A0A0A] rounded-xl border border-white/[0.08] shadow-2xl overflow-hidden relative font-sans transform group-hover:scale-105 transition-transform duration-500 flex flex-col p-4 gap-4">
             {/* Header */}
-            <div className="h-9 border-b border-white/[0.06] flex items-center px-4 bg-white/[0.01]">
-                <div className="flex gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-[#2B2B2B]" />
-                    <div className="w-2 h-2 rounded-full bg-[#2B2B2B]" />
-                    <div className="w-2 h-2 rounded-full bg-[#2B2B2B]" />
+            <div className="flex justify-between items-center pb-2 border-b border-white/5">
+                <div className="text-[10px] text-gray-400 font-mono">DATA_EXPLORER</div>
+                <div className="flex gap-2">
+                    <div className="w-2 h-2 rounded-full bg-[var(--accent)]" />
+                    <div className="text-[10px] text-[var(--accent)] font-bold">Optimizing</div>
                 </div>
-                <div className="ml-auto text-[9px] uppercase tracking-wider text-gray-600 font-medium">Support Agent</div>
+            </div>
+
+            <div className="flex-1 flex gap-4 items-end h-[100px] px-2">
+                {[35, 55, 40, 70, 60, 85, 95].map((h, i) => (
+                    <motion.div
+                        key={i}
+                        initial={{ height: 0 }}
+                        whileInView={{ height: `${h}%` }}
+                        transition={{ duration: 0.8, delay: i * 0.1 }}
+                        className="flex-1 bg-gradient-to-t from-[var(--accent)]/10 to-[var(--accent)]/40 border-t border-[var(--accent)]/50 rounded-t-sm relative group"
+                    >
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 text-[9px] text-white transition-opacity">
+                            {h}%
+                        </div>
+                    </motion.div>
+                ))}
+            </div>
+
+            {/* Analysis Text */}
+            <div className="bg-white/[0.03] rounded-lg p-3 border border-white/5">
+                <div className="flex gap-2 mb-1">
+                    <Zap className="w-3 h-3 text-[var(--accent)]" />
+                    <span className="text-[10px] font-bold text-white">Insight Detected</span>
+                </div>
+                <p className="text-[10px] text-gray-400 leading-relaxed">
+                    Workflow efficiency increased by <span className="text-white font-mono">24%</span> after implementing automated routing.
+                </p>
+            </div>
+        </div>
+    )
+}
+
+// --- PREMIUM VISUALS ---
+
+function DiscordUI() {
+    return (
+        <div className="w-full max-w-[280px] bg-[#313338] rounded-xl border border-white/[0.08] shadow-2xl overflow-hidden relative font-sans transform group-hover:scale-105 transition-transform duration-500">
+            {/* Header */}
+            <div className="h-9 border-b border-[#1E1F22] flex items-center px-4 bg-[#2B2D31]">
+                <div className="text-[10px] text-gray-400 font-bold"># general</div>
             </div>
 
             {/* Chat Area */}
-            <div className="p-4 space-y-3 text-[12px] h-[160px] relative">
+            <div className="p-4 space-y-4 text-[12px] h-[160px] relative">
                 {/* Message 1 */}
                 <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     className="flex gap-3"
                 >
-                    <div className="w-5 h-5 rounded-full bg-white/10 flex-shrink-0" />
-                    <div className="bg-[#1A1A1A] border border-white/[0.06] px-3 py-2 rounded-2xl rounded-tl-sm text-gray-300 max-w-[200px]">
-                        Can you verify deployment?
+                    <div className="w-8 h-8 rounded-full bg-white/10 flex-shrink-0" />
+                    <div>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-white font-medium text-[11px]">User</span>
+                            <span className="text-[9px] text-gray-500">Today at 2:00 PM</span>
+                        </div>
+                        <div className="text-gray-300 mt-0.5">
+                            Check project status
+                        </div>
                     </div>
                 </motion.div>
 
-                {/* Message 2 (Kian) */}
+                {/* Message 2 (Bot) */}
                 <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4 }}
-                    className="flex gap-3 flex-row-reverse"
+                    className="flex gap-3"
                 >
-                    <div className="w-5 h-5 rounded-full bg-[var(--accent)]/20 flex items-center justify-center flex-shrink-0 text-[9px] text-[var(--accent)] font-bold">K</div>
-                    <div className="bg-[var(--accent)]/10 border border-[var(--accent)]/20 px-3 py-2 rounded-2xl rounded-tr-sm text-[var(--accent)] max-w-[200px]">
-                        Production v2.4.0 is live.
-                        <div className="mt-1.5 flex items-center gap-1.5 opacity-70">
-                            <CheckCircle2 className="w-2.5 h-2.5" />
-                            <span className="text-[9px]">Verified</span>
+                    <div className="w-8 h-8 rounded-full bg-[#5865F2] flex items-center justify-center flex-shrink-0 text-[10px] text-white font-bold">
+                        <Bot className="w-4 h-4" />
+                    </div>
+                    <div>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-white font-medium text-[11px] flex gap-1 items-center">
+                                Vallit Bot <span className="bg-[#5865F2] text-[8px] px-1 rounded text-white">BOT</span>
+                            </span>
+                            <span className="text-[9px] text-gray-500">Today at 2:00 PM</span>
+                        </div>
+                        <div className="bg-[#2B2D31] border-l-4 border-[#5865F2] p-2 mt-1 rounded text-gray-300 text-[10px]">
+                            <p className="font-bold text-white mb-1">Project Delta Status</p>
+                            <div className="flex gap-2 mb-1">
+                                <span className="text-green-400">● On Track</span>
+                                <span className="text-gray-400">Due in 2 days</span>
+                            </div>
                         </div>
                     </div>
                 </motion.div>
@@ -177,47 +210,87 @@ function SupportUI() {
     )
 }
 
-function CalendarUI() {
+function WebsiteUI() {
     return (
-        <div className="w-full max-w-[240px] bg-[#0A0A0A] rounded-xl border border-white/[0.08] shadow-2xl relative overflow-hidden font-sans transform group-hover:scale-105 transition-transform duration-500">
-            {/* Calendar Header */}
-            <div className="px-3 py-2 border-b border-white/[0.06] flex justify-between items-center bg-white/[0.01]">
-                <span className="text-[10px] font-medium text-white">October</span>
-                <div className="flex gap-1.5 text-[8px] text-gray-500">
-                    <span className="text-white">Day</span>
-                    <span>Week</span>
-                    <span>Month</span>
+        <div className="w-full max-w-[280px] bg-[#0A0A0A] rounded-xl border border-white/[0.08] shadow-2xl overflow-hidden relative font-sans transform group-hover:scale-105 transition-transform duration-500">
+            {/* Browser Header */}
+            <div className="h-8 border-b border-white/[0.06] flex items-center px-3 gap-2 bg-white/[0.02]">
+                <div className="flex gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-[#FF5F56]" />
+                    <div className="w-2 h-2 rounded-full bg-[#FFBD2E]" />
+                    <div className="w-2 h-2 rounded-full bg-[#27C93F]" />
+                </div>
+                <div className="flex-1 bg-white/[0.05] h-4 rounded text-[8px] flex items-center px-2 text-gray-500 font-mono">
+                    vallit.com
                 </div>
             </div>
 
-            {/* Grid */}
-            <div className="relative h-[140px] bg-[#050505]">
-                {/* Time Lines */}
-                {[9, 10, 11, 12].map((t, i) => (
-                    <div key={t} className="absolute w-full border-b border-white/[0.03] flex items-center px-3" style={{ top: `${i * 33}%` }}>
-                        <span className="text-[8px] text-gray-700 font-mono -mt-[20%]">{t}:00</span>
-                    </div>
-                ))}
-
-                {/* Current Time Line */}
-                <div className="absolute top-[45%] w-full h-px bg-red-500/50 z-20 flex items-center">
-                    <div className="w-1 h-1 rounded-full bg-red-500 -ml-0.5" />
-                </div>
-
-                {/* Event Block */}
+            {/* Content Mockup */}
+            <div className="p-4 relative h-[160px] flex flex-col items-center justify-center space-y-3">
                 <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    whileInView={{ height: 60, opacity: 1 }}
-                    transition={{ delay: 0.2, duration: 0.5 }}
-                    className="absolute top-[35%] left-[20%] right-3 bg-[var(--accent)]/10 border-l-2 border-[var(--accent)] rounded-r-sm px-2 py-1.5 z-10"
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-24 h-6 bg-[var(--accent)]/20 rounded-lg flex items-center justify-center border border-[var(--accent)]/30"
                 >
-                    <div className="flex justify-between items-start">
-                        <span className="text-[9px] font-medium text-[var(--accent)]">Client Demo</span>
-                        <div className="w-2.5 h-2.5 rounded-full bg-[var(--accent)]/20 flex items-center justify-center">
-                            <Clock className="w-1.5 h-1.5 text-[var(--accent)]" />
-                        </div>
-                    </div>
+                    <div className="w-16 h-2 bg-[var(--accent)] rounded-full opacity-60" />
                 </motion.div>
+                <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="space-y-1.5 w-full max-w-[180px]"
+                >
+                    <div className="h-2 w-full bg-white/10 rounded-full" />
+                    <div className="h-2 w-[80%] bg-white/10 rounded-full mx-auto" />
+                </motion.div>
+                <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                    className="flex gap-2 mt-2"
+                >
+                    <div className="w-16 h-5 bg-white/5 rounded border border-white/10" />
+                    <div className="w-16 h-5 bg-[var(--accent)] rounded" />
+                </motion.div>
+            </div>
+        </div>
+    )
+}
+
+function TimeTrackingUI() {
+    return (
+        <div className="w-full max-w-[320px] bg-[#0A0A0A] rounded-xl border border-white/[0.08] shadow-2xl relative overflow-hidden font-sans transform group-hover:scale-105 transition-transform duration-500">
+            {/* Header */}
+            <div className="px-4 py-3 border-b border-white/[0.06] flex justify-between items-center bg-white/[0.01]">
+                <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-[10px] font-medium text-white tracking-wide">TRACKING ACTIVE</span>
+                </div>
+                <span className="text-[10px] font-mono text-[var(--accent)]">02:14:32</span>
+            </div>
+
+            {/* List */}
+            <div className="p-2 space-y-1">
+                {[
+                    { project: "Website Redesign", client: "Acme Corp", time: "1h 30m", active: true },
+                    { project: "Bot Logic", client: "Startup Inc", time: "45m", active: false },
+                    { project: "Client Meeting", client: "Global Ltd", time: "1h 00m", active: false },
+                ].map((item, i) => (
+                    <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        className={`p-2 rounded-lg flex items-center justify-between ${item.active ? 'bg-white/[0.03] border border-white/[0.05]' : 'opacity-50'}`}
+                    >
+                        <div>
+                            <div className="text-[10px] text-white font-medium">{item.project}</div>
+                            <div className="text-[9px] text-gray-500">{item.client}</div>
+                        </div>
+                        <div className="text-[10px] font-mono text-gray-400">{item.time}</div>
+                    </motion.div>
+                ))}
             </div>
         </div>
     )
@@ -275,99 +348,6 @@ function WorkflowUI() {
                     />
                 </circle>
             </svg>
-        </div>
-    )
-}
-
-function IntegrationsUI() {
-    return (
-        <div className="w-full flex items-center justify-center p-6 grayscale hover:grayscale-0 transition-all duration-500">
-            <div className="grid grid-cols-4 gap-4 md:gap-8 opacity-70">
-                {['Slack', 'Notion', 'Google', 'HubSpot'].map((n, i) => (
-                    <motion.div
-                        key={n}
-                        className="w-14 h-14 rounded-2xl bg-[#0A0A0A] border border-white/[0.08] flex items-center justify-center shadow-lg group-hover:border-[var(--accent)]/30 group-hover:bg-[var(--accent)]/5 transition-all"
-                        whileHover={{ y: -4, scale: 1.05 }}
-                    >
-                        <div className="w-6 h-6 bg-white/20 rounded-md" />
-                        {/* In a real scenario, use actual SVG logos here */}
-                    </motion.div>
-                ))}
-            </div>
-
-            {/* Connecting Lines Overlay */}
-            <div className="absolute inset-0 pointer-events-none opacity-20">
-                <svg className="w-full h-full">
-                    <path d="M100 80 Q 200 150 500 80" fill="none" stroke="url(#lineGrad)" strokeWidth="1" strokeDasharray="4 4" />
-                </svg>
-            </div>
-        </div>
-    )
-}
-
-function HumanLoopUI() {
-    return (
-        <div className="w-full h-full flex items-center justify-center">
-            <div className="relative w-[280px] bg-[#0A0A0A] border border-white/[0.08] rounded-xl p-4 shadow-2xl">
-                <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-gray-800 border border-white/10 flex-shrink-0" />
-                    <div className="flex-1">
-                        <div className="flex justify-between items-center mb-1">
-                            <span className="text-[11px] font-medium text-white">Review Request</span>
-                            <span className="text-[9px] text-gray-500">2m ago</span>
-                        </div>
-                        <p className="text-[11px] text-gray-400 mb-3 leading-relaxed">
-                            Confidence score <span className="text-red-400">low (45%)</span>. Please review the drafted response before sending.
-                        </p>
-                        <div className="flex gap-2">
-                            <button className="flex-1 bg-white/[0.05] hover:bg-white/[0.1] border border-white/5 py-1.5 rounded text-[10px] text-white transition-colors">Edit</button>
-                            <button className="flex-1 bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20 border border-[var(--accent)]/20 py-1.5 rounded text-[10px] text-[var(--accent)] transition-colors">Approve</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
-
-function ManagedUI() {
-    return (
-        <div className="w-full h-full flex items-center justify-center p-6">
-            <div className="w-full max-w-[400px] bg-[#050505] rounded-xl border border-white/[0.08] p-4 font-mono text-[10px] shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 inset-x-0 h-6 bg-white/[0.03] border-b border-white/[0.05] flex items-center px-2 gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/20" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/20" />
-                </div>
-
-                <div className="mt-6 space-y-1.5 opacity-80">
-                    <div className="flex text-gray-400">
-                        <span className="text-gray-600 mr-2">1</span>
-                        <span>import <span className="text-purple-400">{"{ Kian }"}</span> from <span className="text-green-400">'@syntra/core'</span>;</span>
-                    </div>
-                    <div className="flex text-gray-400">
-                        <span className="text-gray-600 mr-2">2</span>
-                        <span></span>
-                    </div>
-                    <div className="flex text-gray-400">
-                        <span className="text-gray-600 mr-2">3</span>
-                        <span>const system = new Kian.System(<span className="text-blue-400">{"{ mode: 'prod' }"}</span>);</span>
-                    </div>
-                    <div className="flex text-gray-400">
-                        <span className="text-gray-600 mr-2">4</span>
-                        <span>await system.deploy();</span>
-                    </div>
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: 1 }}
-                        className="flex text-[var(--accent)] mt-2 border-t border-white/5 pt-2"
-                    >
-                        <span className="mr-2">➜</span>
-                        <span>Deployment successful (143ms)</span>
-                    </motion.div>
-                </div>
-            </div>
         </div>
     )
 }

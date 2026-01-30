@@ -62,7 +62,8 @@
         primaryColor: '#3D7A77',
         headerTitle: 'Kian',
         showBranding: true,
-        privacyPolicyUrl: 'https://vallit.net/datenschutz'  // Privacy policy link
+        privacyPolicyUrl: 'https://vallit.net/datenschutz',  // Privacy policy link
+        logoUrl: DEFAULT_API_URL + '/images/wtm-logo.png'    // Default WTM Logo
     };
 
     // =========================================================================
@@ -263,8 +264,8 @@
                     <!-- Header -->
                     <div class="syntra-header">
                         <div class="syntra-header-info">
-                            <div class="syntra-avatar">
-                                ${this.config.headerTitle.charAt(0)}
+                            <div class="syntra-avatar" style="overflow: hidden;">
+                                ${this.config.logoUrl ? `<img src="${this.config.logoUrl}" alt="${this.config.headerTitle}" style="width: 100%; height: 100%; object-fit: cover;">` : this.config.headerTitle.charAt(0)}
                             </div>
                             <div class="syntra-header-text">
                                 <div class="syntra-header-title">${this.config.headerTitle}</div>
@@ -1098,7 +1099,8 @@
                 headerTitle: script.getAttribute('data-title'),
                 primaryColor: script.getAttribute('data-color'),
                 showBranding: script.getAttribute('data-branding') !== 'false',
-                privacyPolicyUrl: script.getAttribute('data-privacy-url')
+                privacyPolicyUrl: script.getAttribute('data-privacy-url'),
+                logoUrl: script.getAttribute('data-logo-url')
             };
 
             // Remove undefined values

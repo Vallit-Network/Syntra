@@ -13,34 +13,35 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Vallit – Done-for-you AI Automation",
+    default: "Vallit – Digital Solutions Redefined",
     template: "%s | Vallit",
   },
   description:
-    "Vallit builds and deploys AI automation systems that integrate into your real stack. Kian handles support, scheduling, and workflows end-to-end.",
+    "Personalized and improved digital solutions. We build what others can't: Custom AI Automation, Deeply Integrated Discord Bots, Immersive Websites, and Cognitive Time Tracking.",
   keywords: [
     "AI automation",
+    "Data Analysis",
+    "Discord bots",
+    "web development",
+    "time tracking AI",
     "managed AI",
     "enterprise automation",
     "Kian AI",
-    "workflow automation",
-    "support automation",
-    "scheduling AI",
   ],
   authors: [{ name: "Vallit" }],
   openGraph: {
     type: "website",
     locale: "en_US",
     siteName: "Vallit",
-    title: "Vallit – Done-for-you AI Automation",
+    title: "Vallit – Digital Solutions Redefined",
     description:
-      "We build and deploy AI systems that integrate into your real stack and processes.",
+      "Personalized and improved digital solutions. Custom AI, Discord Bots, Websites, and Time Tracking.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vallit – Done-for-you AI Automation",
+    title: "Vallit – Digital Solutions Redefined",
     description:
-      "We build and deploy AI systems that integrate into your real stack and processes.",
+      "Personalized and improved digital solutions. Custom AI, Discord Bots, Websites, and Time Tracking.",
   },
   robots: {
     index: true,

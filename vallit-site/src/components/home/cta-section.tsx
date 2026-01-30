@@ -88,9 +88,9 @@ export function CTASection() {
                         transition={{ duration: 0.8 }}
                     >
                         <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight drop-shadow-xl">
-                            Ready for AI that <br />
+                            Ready to build <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent)] via-emerald-200 to-[var(--accent)] animate-gradient-x">
-                                actually works?
+                                the impossible?
                             </span>
                         </h2>
                     </motion.div>

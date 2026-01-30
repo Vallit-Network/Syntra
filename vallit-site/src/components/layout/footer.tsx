@@ -14,7 +14,7 @@ const footerLinks = {
         { href: "/pricing#contact", label: "Contact" },
     ],
     legal: [
-        { href: "/impressum", label: "Impressum" },
+        { href: "/impressum", label: "Legal Notice" },
         { href: "/datenschutz", label: "Privacy Policy" },
     ],
 };
@@ -150,7 +150,7 @@ export function Footer() {
                             href="/impressum"
                             className="text-sm text-[var(--gray-500)] hover:text-[var(--gray-300)] transition-colors"
                         >
-                            Impressum
+                            Legal Notice
                         </Link>
                         <Link
                             href="/datenschutz"

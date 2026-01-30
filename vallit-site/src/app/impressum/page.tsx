@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Impressum",
+    title: "Legal Notice",
     description: "Legal notice and company information for Vallit.",
 };
 
@@ -10,7 +10,7 @@ export default function ImpressumPage() {
         <div className="pt-32 pb-20 md:pt-40 md:pb-24">
             <div className="container mx-auto px-6 max-w-3xl">
                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-8">
-                    Impressum
+                    Legal Notice
                 </h1>
 
                 <div className="prose prose-invert max-w-none space-y-8 text-[var(--gray-300)]">
@@ -57,7 +57,7 @@ export default function ImpressumPage() {
                         <h2 className="text-xl font-semibold text-white mb-4">
                             Represented by
                         </h2>
-                        <p>[Managing Director Name]</p>
+                        <p>Theo Reichert</p>
                     </section>
 
                     <section>
@@ -65,9 +65,13 @@ export default function ImpressumPage() {
                             Responsible for Content
                         </h2>
                         <p>
-                            [Name]
+                            Theo Reichert
                             <br />
-                            [Address]
+                            Parkstraße 1
+                            <br />
+                            76131 Karlsruhe
+                            <br />
+                            Germany
                         </p>
                     </section>
 

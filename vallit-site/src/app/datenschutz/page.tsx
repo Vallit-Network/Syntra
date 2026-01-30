@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import { DataRequestForm } from "@/components/privacy/data-request-form";
 
 export const metadata: Metadata = {
     title: "Privacy Policy | Vallit",
@@ -98,7 +100,18 @@ export default function DatenschutzPage() {
                             In the event of GDPR violations, data subjects are entitled to log a complaint with a supervisory authority, in particular in the Member State of their habitual residence, place of work, or place of the alleged violation.
                         </p>
 
-                        <h3 className="text-xl font-medium text-white mb-3 mt-6">SSL and/or TLS Encryption</h3>
+                        <h3 className="text-xl font-medium text-white mb-3 mt-6">Right of Appeal to the Competent Supervisory Authority</h3>
+                        <p>
+                            In the event of GDPR violations, data subjects are entitled to log a complaint with a supervisory authority, in particular in the Member State of their habitual residence, place of work, or place of the alleged violation.
+                        </p>
+
+                        <h3 className="text-xl font-medium text-white mb-3 mt-6">Automated Data Management Tool</h3>
+                        <p>
+                            To make it easier for you to exercise your rights, we provide an automated tool below to request access to or deletion of your data stored in our systems (including consultation bookings and chat logs).
+                        </p>
+                        <DataRequestForm />
+
+                        <h3 className="text-xl font-medium text-white mb-3 mt-8">SSL and/or TLS Encryption</h3>
                         <p>
                             For security reasons and to protect the transmission of confidential content, such as inquiries you send to us, this site uses SSL or TLS encryption.
                             You can recognize an encrypted connection in your browser's address line when it changes from "http://" to "https://" and by the lock icon in your browser line.

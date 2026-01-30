@@ -69,6 +69,13 @@ function KianWidgetContent() {
     const handleSend = async (text: string) => {
         if (!text.trim()) return;
 
+        // Generate or get session ID EARLY so we can use it for logging
+        let sessionId = localStorage.getItem("vallit_session_id");
+        if (!sessionId) {
+            sessionId = `web_${Date.now()}`;
+            localStorage.setItem("vallit_session_id", sessionId);
+        }
+
         const userMessage: Message = {
             id: Date.now().toString(),
             role: "user",
@@ -78,6 +85,17 @@ function KianWidgetContent() {
 
         setMessages((prev) => [...prev, userMessage]);
         setInput("");
+
+        // LOG USER MESSAGE (Fire and Forget)
+        fetch('/api/chat/log', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                session_id: sessionId,
+                role: 'user',
+                content: text.trim()
+            })
+        }).catch(err => console.error("Failed to log user message", err));
 
         // Visual Feedback: Show "Searching..." for specific intent keywords
         const searchKeywords = ["seminar", "führung", "management", "kommunikation", "change", "gesundheit", "kurs", "training"];
@@ -92,13 +110,6 @@ function KianWidgetContent() {
         try {
             // Use relative path to ensure we hit the same domain (Vercel routing)
             const API_URL = "";
-
-            // Generate or get session ID 
-            let sessionId = localStorage.getItem("vallit_session_id");
-            if (!sessionId) {
-                sessionId = `web_${Date.now()}`;
-                localStorage.setItem("vallit_session_id", sessionId);
-            }
 
             const response = await fetch(`${API_URL}/api/chat/message`, {
                 method: "POST",
@@ -135,6 +146,18 @@ function KianWidgetContent() {
                     type: "text"
                 };
                 setMessages((prev) => [...prev, assistantMessage]);
+
+                // LOG ASSISTANT MESSAGE
+                fetch('/api/chat/log', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        role: 'assistant',
+                        content: data.response
+                    })
+                }).catch(err => console.error("Failed to log assistant message", err));
+
             } else {
                 console.error("Server API error:", data);
                 const errorMessage: Message = {
