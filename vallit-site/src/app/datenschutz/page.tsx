@@ -73,16 +73,13 @@ export default function DatenschutzPage() {
                             <h3 className="text-lg font-semibold text-white mb-4">Information about the Responsible Party (Controller)</h3>
                             <p className="mb-2">The responsible party for data processing on this website is:</p>
                             <p className="font-mono text-sm bg-[rgba(0,0,0,0.3)] p-4 rounded-lg border border-[rgba(255,255,255,0.05)]">
-                                <span className="text-[var(--accent)]">Vallit GmbH</span><br />
-                                [Street Address]<br />
-                                [Postal Code, City]<br />
+                                <span className="text-[var(--accent)]">Vallit</span><br />
+                                Parkstraße 1<br />
+                                76131 Karlsruhe<br />
                                 Germany<br /><br />
-                                Phone: [Phone Number]<br />
-                                Email: [Email Address]
+                                Email: contact@vallit.net
                             </p>
-                            <p className="mt-4 text-sm text-[var(--gray-400)]">
-                                ⚠️ <strong>Action Required:</strong> Please replace the bracketed placeholders above with your actual company details.
-                            </p>
+
                         </div>
 
                         <h3 className="text-xl font-medium text-white mb-3">Revocation of Your Consent to Data Processing</h3>
@@ -151,7 +148,7 @@ export default function DatenschutzPage() {
                     <section>
                         <h2 className="text-2xl font-semibold text-white mb-6">5. Custom Features & Tools</h2>
 
-                        <h3 className="text-xl font-medium text-white mb-3">AI Assistant "Kian" (OpenAI)</h3>
+                        <h3 className="text-xl font-medium text-white mb-3">AI Assistant "Kian"</h3>
                         <p>
                             We use an AI-powered chatbot ("Kian") on our website to answer your questions and assist with scheduling.
                             The content of your chat interactions is processed by our backend and forwarded to OpenAI, L.L.C., San Francisco, USA, for generating responses.
@@ -182,7 +179,7 @@ export default function DatenschutzPage() {
                             If you have any questions about this privacy policy or our data protection practices, please contact us at:
                         </p>
                         <p className="mt-4 font-bold text-white">
-                            [Insert Email Address, e.g., privacy@vallit.net]
+                            contact@vallit.net
                         </p>
                     </section>
                 </div>

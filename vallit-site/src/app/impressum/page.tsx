@@ -14,22 +14,18 @@ export default function ImpressumPage() {
                 </h1>
 
                 <div className="prose prose-invert max-w-none space-y-8 text-[var(--gray-300)]">
-                    <div className="p-6 bg-[rgba(255,255,255,0.03)] rounded-xl border border-[rgba(255,255,255,0.08)]">
-                        <p className="text-[var(--gray-400)] text-sm mb-4">
-                            ⚠️ Placeholder: Replace with your actual legal information
-                        </p>
-                    </div>
+
 
                     <section>
                         <h2 className="text-xl font-semibold text-white mb-4">
                             Company Information
                         </h2>
                         <p>
-                            Vallit GmbH
+                            Vallit
                             <br />
-                            [Street Address]
+                            Parkstraße 1
                             <br />
-                            [Postal Code] [City]
+                            76131 Karlsruhe
                             <br />
                             Germany
                         </p>
@@ -41,8 +37,6 @@ export default function ImpressumPage() {
                         </h2>
                         <p>
                             Email: contact@vallit.net
-                            <br />
-                            Phone: [Phone Number]
                         </p>
                     </section>
 
