@@ -7,7 +7,7 @@ const SMTP_PORT = parseInt(process.env.SMTP_PORT || '587');
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
 const SMTP_SENDER = process.env.SMTP_SENDER || '"Vallit Kian Bot" <info@vallit.net>';
-const ADMIN_EMAIL = process.env.SMTP_USER; // Send copy to admin
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.SMTP_USER; // Send copy to admin
 
 // Zoom Link - Securely retrieved from env, never exposed to client
 const ZOOM_LINK = process.env.ZOOM_STATIC_LINK || "https://zoom.us/j/example-meeting-id";
@@ -17,15 +17,20 @@ import { createClient } from '@/utils/supabase/server';
 export async function POST(request: Request) {
     try {
         const supabase = await createClient();
-        const body = await request.json();
+
+        let body;
+        try {
+            body = await request.json();
+        } catch (e) {
+            return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+        }
+
         const { name, email, date, topic, company } = body;
 
-        if (!name || !email || !date) {
-            return NextResponse.json(
-                { error: 'Missing required fields' },
-                { status: 400 }
-            );
-        }
+        // Validation
+        if (!name || typeof name !== 'string') return NextResponse.json({ error: 'Missing or invalid name' }, { status: 400 });
+        if (!email || !email.includes('@')) return NextResponse.json({ error: 'Missing or invalid email' }, { status: 400 });
+        if (!date) return NextResponse.json({ error: 'Missing required field: date' }, { status: 400 });
 
         // 1. Configure Transporter
         const transporter = nodemailer.createTransport({
@@ -40,6 +45,10 @@ export async function POST(request: Request) {
 
         // 2. Format Date
         const dateObj = new Date(date);
+        if (isNaN(dateObj.getTime())) {
+            return NextResponse.json({ error: 'Invalid date format' }, { status: 400 });
+        }
+
         const dateStr = dateObj.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         const timeStr = dateObj.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
 
@@ -65,7 +74,6 @@ export async function POST(request: Request) {
             <p>Best regards,<br>The Vallit Team</p>
         </div>
         `,
-            // Start ICS logic could be added here as attachment
         };
 
         // 4. Send Email to Admin
@@ -86,10 +94,16 @@ export async function POST(request: Request) {
         };
 
         // Send both
-        await Promise.all([
-            transporter.sendMail(userMailOptions),
-            transporter.sendMail(adminMailOptions)
-        ]);
+        // We log errors but don't fail the request if email fails, unless both fail
+        try {
+            await Promise.all([
+                transporter.sendMail(userMailOptions),
+                transporter.sendMail(adminMailOptions)
+            ]);
+        } catch (emailError) {
+            console.error('Email sending failed partially or completely:', emailError);
+            // Proceed to save to DB anyway
+        }
 
         // 5. Store in Database
         const { error: dbError } = await supabase
@@ -104,8 +118,10 @@ export async function POST(request: Request) {
 
         if (dbError) {
             console.error('Database Insertion Error:', dbError);
-            // We do NOT fail the request if email sent successfully, but we log it.
-            // Ideally we might want to alert admin.
+            return NextResponse.json(
+                { error: 'Failed to save appointment to database', details: dbError.message },
+                { status: 500 }
+            );
         }
 
         return NextResponse.json({ success: true, message: 'Booking confirmed and emails sent.' });
