@@ -36,10 +36,6 @@
             "destination": "/api/index.py"
         },
         {
-            "source": "/widget/(.*)",
-            "destination": "/api/index.py"
-        },
-        {
             "source": "/static/(.*)",
             "destination": "/api/index.py"
         },
