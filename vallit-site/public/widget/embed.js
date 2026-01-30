@@ -213,7 +213,16 @@
                         if (titleEl) titleEl.textContent = this.config.headerTitle;
 
                         const avatarEl = this.container.querySelector('.syntra-avatar');
-                        if (avatarEl) avatarEl.textContent = this.config.headerTitle.charAt(0);
+                        if (avatarEl) {
+                            console.log('Rendering Avatar. LogoURL:', this.config.logoUrl);
+                            if (this.config.logoUrl) {
+                                // Keep image if configured. Add error handling to avoid silent failure.
+                                avatarEl.innerHTML = `<img src="${this.config.logoUrl}" alt="${this.config.headerTitle}" style="width: 100%; height: 100%; object-fit: cover;" onerror="console.error('Failed to load WTM logo at:', this.src); this.style.display='none';">`;
+                            } else {
+                                // Fallback to text char
+                                avatarEl.textContent = this.config.headerTitle.charAt(0);
+                            }
+                        }
                     }
                 }
 
@@ -222,6 +231,8 @@
                     // Check if valid theme or just rely on CSS
                     // Ideally we would replace the class
                 }
+
+                console.log('Vallit Chat Config Loaded. API URL:', this.config.apiUrl, 'Logo URL:', this.config.logoUrl);
 
             } catch (e) {
                 console.warn('Failed to load remote config:', e);
