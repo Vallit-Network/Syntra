@@ -29,9 +29,9 @@ export default function HomePage() {
       {/* Kian in 60 Seconds */}
       <Section id="how-it-works" className="bg-[rgba(255,255,255,0.01)]">
         <SectionHeader
-          badge="System Architecture"
-          title="Logic in Motion"
-          subtitle="From user input to completed action — see how our intelligent systems handle requests end-to-end."
+          badge="How It Works"
+          title="Kian in 60 seconds"
+          subtitle="From customer message to completed action — see how Kian handles requests end-to-end."
         />
         <StickyStepper />
       </Section>

@@ -37,8 +37,8 @@ export function Hero() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 drop-shadow-2xl"
                     >
-                        Digital Solutions <br />
-                        <span className="text-[var(--accent)]">Redefined.</span>
+                        AI systems that work. <br />
+                        <span className="text-[var(--accent)]">Built for you.</span>
                     </motion.h1>
 
                     {/* Subtitle */}
@@ -47,7 +47,8 @@ export function Hero() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="text-xl md:text-2xl text-[var(--gray-300)] leading-relaxed max-w-2xl mx-auto mb-12"
                     >
-                        From custom AI automation and Discord bots to immersive websites and intelligent time tracking. We build personalized systems that outperform the standard.
+                        Kian understands your business context, handles support, schedules
+                        meetings, and executes workflows end-to-end.
                     </motion.p>
 
                     {/* CTAs */}

@@ -19,28 +19,28 @@ const steps: Step[] = [
         id: "input",
         title: "Input",
         description:
-            "User interacts via chat, website form, Discord command, or time entry. The system captures intent instantly.",
+            "Customer sends a message via chat, email, or form. Kian receives and processes it instantly.",
         VisualComponent: InputVisual,
     },
     {
         id: "context",
         title: "Context",
         description:
-            "The engine analyzes the input against your business rules, user history, and project data to form a complete picture.",
+            "Kian understands your business. It accesses your knowledge base, policies, and current state to form context.",
         VisualComponent: ContextVisual,
     },
     {
         id: "action",
         title: "Action",
         description:
-            "Automated logic executes: booking meetings, updating databases, generating code, or escalating to humans.",
+            "Kian takes action. It schedules meetings, updates systems, or escalates to humans when needed.",
         VisualComponent: ActionVisual,
     },
     {
         id: "result",
         title: "Result",
         description:
-            "Task completed. User notified. Data synced. Every action is logged for full transparency.",
+            "Customer receives a response. Task is completed. Everything is logged and synced with your tools.",
         VisualComponent: ResultVisual,
     },
 ];
@@ -83,8 +83,8 @@ export function StickyStepper() {
                     <div className="hidden lg:block h-full">
                         <div className="sticky top-40 space-y-4">
                             <h2 className="text-3xl font-bold text-white mb-8 px-6">
-                                From Input to <br />
-                                <span className="text-[var(--accent)]">Intelligent Action.</span>
+                                How Kian works <br />
+                                <span className="text-[var(--accent)]">in 60 seconds.</span>
                             </h2>
                             <div className="space-y-2">
                                 {steps.map((step, index) => (
