@@ -64,6 +64,8 @@ function KianWidgetContent() {
         }
     }, [isOpen, messages]);
 
+    const [isSearching, setIsSearching] = useState(false);
+
     const handleSend = async (text: string) => {
         if (!text.trim()) return;
 
@@ -76,48 +78,53 @@ function KianWidgetContent() {
 
         setMessages((prev) => [...prev, userMessage]);
         setInput("");
-        setIsTyping(true);
+
+        // Visual Feedback: Show "Searching..." for specific intent keywords
+        const searchKeywords = ["seminar", "führung", "management", "kommunikation", "change", "gesundheit", "kurs", "training"];
+        const isSearchIntent = searchKeywords.some(k => text.toLowerCase().includes(k));
+
+        if (isSearchIntent) {
+            setIsSearching(true);
+        } else {
+            setIsTyping(true);
+        }
 
         try {
             // Use relative path to ensure we hit the same domain (Vercel routing)
-            // Hardcoding to empty string forces relative path usage
             const API_URL = "";
 
-            // Generate or get session ID (simple local storage or memory for now)
+            // Generate or get session ID 
             let sessionId = localStorage.getItem("vallit_session_id");
             if (!sessionId) {
                 sessionId = `web_${Date.now()}`;
                 localStorage.setItem("vallit_session_id", sessionId);
             }
 
-            console.log("Sending chat request to:", `${API_URL}/api/chat/message`);
-
             const response = await fetch(`${API_URL}/api/chat/message`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Accept": "application/json" // Explicitly request JSON
+                    "Accept": "application/json"
                 },
                 body: JSON.stringify({
                     message: text,
                     session_id: sessionId,
-                    widget_id: "vallit-web",  // Identifier for the main site
-                    // company_id: "..." // Optional: defaults to Generic/Vallit if backend handles it
+                    widget_id: "vallit-web",
                 })
             });
 
-            console.log("Response status:", response.status);
+            // Minimum delay to let user see the "Searching" state (UX best practice)
+            if (isSearchIntent) {
+                await new Promise(r => setTimeout(r, 800));
+            }
 
-            // Safety: Try to read text first to debug if JSON parsing fails
             const responseText = await response.text();
-            console.log("Raw response:", responseText.substring(0, 200) + "...");
-
             let data;
             try {
                 data = JSON.parse(responseText);
             } catch (jsonError) {
                 console.error("JSON Parse Error:", jsonError);
-                throw new Error("Invalid server response format (not JSON)");
+                throw new Error("Invalid server response format");
             }
 
             if (data.status === "success") {
@@ -125,36 +132,32 @@ function KianWidgetContent() {
                     id: (Date.now() + 1).toString(),
                     role: "assistant",
                     content: data.response,
-                    type: "text" // Backend needs to return type/action if needed
+                    type: "text"
                 };
                 setMessages((prev) => [...prev, assistantMessage]);
             } else {
-                console.error("Server returned API error:", data);
-                // Fallback for error
-                let errorDetails = data.error || 'Unknown';
-                if (typeof errorDetails === 'object') {
-                    errorDetails = JSON.stringify(errorDetails);
-                }
+                console.error("Server API error:", data);
                 const errorMessage: Message = {
                     id: (Date.now() + 1).toString(),
                     role: "assistant",
-                    content: `I'm having trouble connecting. Error: ${errorDetails}`,
+                    content: `I'm having trouble connecting.`,
                     type: "text",
                 };
                 setMessages((prev) => [...prev, errorMessage]);
             }
 
         } catch (error) {
-            console.error("Chat API Error Detailed:", error);
+            console.error("Chat API Error:", error);
             const errorMessage: Message = {
                 id: (Date.now() + 1).toString(),
                 role: "assistant",
-                content: `Sorry, I can't connect to the server. (${error instanceof Error ? error.message : 'Unknown Error'})`,
+                content: `Sorry, I can't connect to the server right now.`,
                 type: "text",
             };
             setMessages((prev) => [...prev, errorMessage]);
         } finally {
             setIsTyping(false);
+            setIsSearching(false);
         }
     };
 
@@ -350,13 +353,24 @@ function KianWidgetContent() {
                             )}
                         </div>
                     ))}
-                    {isTyping && (
+                    {isSearching && (
+                        <div className="flex justify-start animate-fade-in-up">
+                            <div className="bg-[rgba(var(--accent-rgb),0.1)] text-[var(--accent)] px-3 py-2 rounded-xl text-xs border border-[rgba(var(--accent-rgb),0.2)] flex items-center gap-2 shadow-sm">
+                                <svg className="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span className="font-medium tracking-wide">Searching WTM Knowledge Base...</span>
+                            </div>
+                        </div>
+                    )}
+                    {isTyping && !isSearching && (
                         <div className="flex justify-start">
                             <div className="bg-[rgba(255,255,255,0.06)] text-[var(--gray-400)] px-4 py-3 rounded-2xl text-sm border border-[rgba(255,255,255,0.06)]">
                                 <span className="flex gap-1">
-                                    <span className="w-2 h-2 bg-[var(--gray-400)] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                                    <span className="w-2 h-2 bg-[var(--gray-400)] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                                    <span className="w-2 h-2 bg-[var(--gray-400)] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                                    <span className="w-1.5 h-1.5 bg-[var(--gray-400)] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                                    <span className="w-1.5 h-1.5 bg-[var(--gray-400)] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                                    <span className="w-1.5 h-1.5 bg-[var(--gray-400)] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                                 </span>
                             </div>
                         </div>

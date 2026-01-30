@@ -815,13 +815,19 @@ def get_seminar_context(query_text: str) -> str:
             return ""
             
         # formatting
-        top_matches = matched_items[:5] # Increase context window slightly
+        # If we detected a category intent, we want ALL items in that category to ensure completeness
+        # Otherwise we limit to top 8 to save context space
+        if category_intent:
+             top_matches = matched_items  # Return all
+        else:
+             top_matches = matched_items[:8] 
         
-        context_str = "### SOURCE MATERIAL (Strictly adhere to this):\n\n"
+        context_str = "### STRICT SEMINAR SOURCE (ONLY use these entries, DO NOT invent others):\n\n"
         for _, item in top_matches:
             context_str += f"Title: {item.get('seminar_name')}\n"
             context_str += f"Category: {item.get('category')}\n"
-            context_str += f"Info: {item.get('answer')}\n"
+            # Simplify info to save tokens if listing many
+            context_str += f"Info: {item.get('answer')[:300]}...\n" 
             context_str += "---\n"
             
         return context_str

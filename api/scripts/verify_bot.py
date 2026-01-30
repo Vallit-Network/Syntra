@@ -22,6 +22,19 @@ def verify():
          print("✅ PASS: Found Zeitmanagement")
     else:
          print("❌ FAIL: Did not find Zeitmanagement")
+
+    print("\n--- Test 4: COMPLETENESS 'Management' ---")
+    # This was failing before (returning only top 5 mixed). Now should return ALL management seminars.
+    context = get_seminar_context("Welche Management Seminare hab ihr?")
+    print(f"Result length: {len(context)}")
+    # Count occurrences of expected seminars
+    expected = ["Betriebsorganisation", "BWL für Nicht-BWLer", "Krisenmanagement", "Praxis-Werkstatt", "Projekte aus der Krise", "Projektmanagement Basistraining", "Selbstmanagement", "Zeitmanagement"]
+    found = sum(1 for e in expected if e in context)
+    print(f"Found {found}/{len(expected)} expected management seminars.")
+    if found >= 6: 
+         print("✅ PASS: List is complete (or near complete)")
+    else:
+         print("❌ FAIL: List incomplete")
          
     print("\n--- Test 3: Mixed Query 'Kommunikation und Konflikte' ---")
     context = get_seminar_context("Ich will besser kommunizieren bei Konflikten")
