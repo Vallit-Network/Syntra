@@ -27,18 +27,30 @@
     // This ensures the widget connects to the Vallit backend even when embedded on other domains
     const getScriptOrigin = () => {
         try {
-            // Try to get the current script element
+            // Priority 1: Check for explicit data-api-url on the script tag itself
+            // This allows manual override if auto-detection fails
+            const scripts = document.querySelectorAll('script[src*="embed.js"]');
+            for (let i = 0; i < scripts.length; i++) {
+                const url = scripts[i].getAttribute('data-api-url');
+                if (url) return url.replace(/\/+$/, '');
+            }
+
+            // Priority 2: document.currentScript
             const currentScript = document.currentScript;
             if (currentScript && currentScript.src) {
                 return new URL(currentScript.src).origin;
             }
 
-            // Fallback: find script by checking for embed.js in src
-            const scripts = document.querySelectorAll('script[src*="embed.js"]');
+            // Priority 3: infer from src attribute
             if (scripts.length > 0) {
                 const scriptSrc = scripts[0].getAttribute('src');
                 if (scriptSrc) {
-                    return new URL(scriptSrc, window.location.href).origin;
+                    try {
+                        const url = new URL(scriptSrc, window.location.href);
+                        return url.origin;
+                    } catch (e) {
+                        // invalid url
+                    }
                 }
             }
         } catch (e) {
