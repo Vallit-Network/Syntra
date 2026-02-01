@@ -1,48 +1,44 @@
 import { Metadata } from "next";
 import { PricingHero } from "@/components/pricing/pricing-hero";
-import { PricingValueProps } from "@/components/pricing/pricing-value-props";
-import { PricingTiers } from "@/components/pricing/pricing-tiers";
-import { FeatureComparison } from "@/components/pricing/feature-comparison";
+import { HybridPricing } from "@/components/pricing/hybrid-pricing";
+import { ValueBreakdown } from "@/components/pricing/value-breakdown";
 import { TrustSection } from "@/components/pricing/trust-section";
 import { PricingFaq } from "@/components/pricing/pricing-faq";
+import { PricingCTA } from "@/components/pricing/pricing-cta";
 import { Section, SectionHeader } from "@/components/ui/section";
 import { ContactForm } from "@/components/pricing/contact-form";
-import { CTASection } from "@/components/home/cta-section";
 
 export const metadata: Metadata = {
-    title: "Pricing | Vallit - AI Automation That Pays For Itself",
+    title: "Pricing | Vallit - Managed AI Automation Partnerships",
     description:
-        "Simple, transparent pricing for managed AI automation. Starter at €29/mo, Growth at €79/mo, or custom Enterprise plans. All include managed setup.",
+        "Transparent agency pricing. One-time build from €2.5k, monthly growth engine from €299. We build, manage, and optimize your AI infrastructure.",
 };
 
 export default function PricingPage() {
     return (
         <>
-            {/* Hero Section */}
+            {/* 1. Partnership Hero */}
             <PricingHero />
 
-            {/* Value Propositions */}
-            <PricingValueProps />
+            {/* 2. Hybrid Packages (Launch / Scale / Enterprise) */}
+            <HybridPricing />
 
-            {/* Pricing Tiers */}
-            <PricingTiers />
+            {/* 3. Why Monthly? (Build vs Run) */}
+            <ValueBreakdown />
 
-            {/* Feature Comparison */}
-            <FeatureComparison />
-
-            {/* Trust & Social Proof */}
+            {/* 4. Social Proof */}
             <TrustSection />
 
-            {/* FAQ Section */}
+            {/* 5. FAQ */}
             <PricingFaq />
 
-            {/* Contact Form */}
+            {/* 6. Contact Form */}
             <Section id="contact">
                 <div className="max-w-2xl mx-auto">
                     <SectionHeader
-                        badge="Get Started"
-                        title="Ready to automate?"
-                        subtitle="Fill out the form below and we'll get back to you within 24 hours with a custom plan for your needs."
+                        badge="Start Your Project"
+                        title="Let's build something great"
+                        subtitle="Tell us about your business goals. We'll design a custom automation roadmap for free."
                     />
                     <div className="bg-[#0A0A0A] rounded-2xl border border-white/10 p-8 md:p-10 shadow-2xl">
                         <ContactForm />
@@ -50,8 +46,8 @@ export default function PricingPage() {
                 </div>
             </Section>
 
-            {/* Final CTA */}
-            <CTASection />
+            {/* 7. Unique Final CTA */}
+            <PricingCTA />
         </>
     );
 }

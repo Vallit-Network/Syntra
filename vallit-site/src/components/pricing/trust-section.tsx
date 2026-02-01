@@ -6,13 +6,13 @@ import { Star } from "lucide-react";
 
 const stats = [
     { value: "500+", label: "Businesses served" },
-    { value: "98%", label: "Customer satisfaction" },
+    { value: "98%", label: "Client retention" },
     { value: "2M+", label: "Conversations handled" },
     { value: "127hrs", label: "Avg. time saved/mo" },
 ];
 
 const testimonial = {
-    quote: "Kian transformed how we handle customer inquiries. What used to take our team hours now happens automatically—and the responses are better than what we were sending manually.",
+    quote: "The monthly analysis reports alone are worth the fee. They found a bottleneck in our support process we didn't even know existed.",
     author: "Sarah Chen",
     role: "Head of Operations",
     company: "TechFlow",
@@ -25,7 +25,7 @@ export function TrustSection() {
                 <SectionHeader
                     badge="Trusted By"
                     title="Teams that choose results"
-                    subtitle="Join hundreds of businesses automating their operations with Vallit."
+                    subtitle="Join hundreds of businesses growing with our automation ecosystem."
                 />
 
                 {/* Stats Grid */}
@@ -91,29 +91,6 @@ export function TrustSection() {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </motion.div>
-
-                {/* Logo Grid Placeholder */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                    viewport={{ once: true }}
-                    className="mt-16"
-                >
-                    <p className="text-center text-sm text-[var(--gray-500)] mb-8">
-                        Trusted by teams at
-                    </p>
-                    <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-40 grayscale">
-                        {['Company A', 'Company B', 'Company C', 'Company D', 'Company E'].map((company) => (
-                            <div
-                                key={company}
-                                className="px-6 py-3 bg-white/5 rounded-lg border border-white/5 text-sm text-white/40"
-                            >
-                                {company}
-                            </div>
-                        ))}
                     </div>
                 </motion.div>
             </div>
